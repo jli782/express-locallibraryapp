@@ -10,7 +10,12 @@
         <%- include('layout'); -%>
         <div class="col-sm-10">
           <h1><%= book_detail.title %></h1>
-          <p><%= book_detail.author.name %></p>
+          <p>
+            <strong>By:</strong>
+            <a href="<%= book_detail.author.url %>"
+              ><%= book_detail.author.name %></a
+            >
+          </p>
           <p><%= book_detail.summary%></p>
           <p><strong>ISBN: </strong><%=book_detail.isbn%></p>
           <p>

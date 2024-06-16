@@ -18,7 +18,20 @@ exports.bookInstance_list = asyncHandler(async (req, res, next) => {
 
 // detail page for a specific BookInstance
 exports.bookInstance_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: BookInstance details ${req.params.id}`);
+  // res.send(`NOT IMPLEMENTED: BookInstance details ${req.params.id}`);
+  let instance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+  console.log(instance);
+  if (!instance) {
+    const err = new Error("Book copy not found");
+    err.status = 404;
+    return next(err);
+  }
+  res.render("book_instance_detail", {
+    title: instance._id,
+    book_instance: instance,
+  });
 });
 
 // GET form to create BookInstance

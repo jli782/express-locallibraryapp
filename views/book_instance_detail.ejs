@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1>Id: <%= title %></h1>
+          <p>
+            <strong>Title: </strong
+            ><a href="<%=book_instance.book.url%>"
+              ><%= book_instance.book.title %></a
+            >
+          </p>
+          <p><strong>Imprint: </strong><%= book_instance.imprint %></p>
+          <p>
+            <strong>Status: </strong>
+            <% if (book_instance.status == 'Available') { %>
+            <span class="text-success"><%= book_instance.status %></span>
+            <% } else if (book_instance.status == 'Maintenance') {%>
+            <span class="text-danger"><%= book_instance.status %></span>
+            <% }else { %>
+            <span class="text-warning"><%= book_instance.status %></span>
+            <% }%>
+          </p>
+          <p>
+            <strong>Due back: </strong><%= book_instance.due_back_formatted %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "lint:ejs": "ejslint ./views/*",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "SET DEBUG=express-locallibraryapp:* & npm run devstart",
+    "serverstart": "npm run lint:ejs & SET DEBUG=express-locallibraryapp:* & npm run devstart",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "morgan": "~1.10.0"
   },
   "devDependencies": {
+    "ejs-lint": "^2.0.0",
     "nodemon": "^3.1.3"
   }
 }

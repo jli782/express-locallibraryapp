@@ -28,13 +28,13 @@ AuthorSchema.virtual("dob_formatted").get(function () {
     ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(
         DateTime.DATETIME_MED
       )
-    : "";
+    : "???";
 
   let dod = this.date_of_death
     ? DateTime.fromJSDate(this.date_of_death).toLocaleString(
         DateTime.DATETIME_MED
       )
-    : "";
+    : "???";
 
   let res = "";
   if (dob && dod) res = `${dob} - ${dod}`;
