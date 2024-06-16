@@ -21,8 +21,8 @@
             >, <% } %>
           </p>
           <div style="margin-left: 20px; margin-top: 20px">
-            <% if (book_copies){ %> <% for (let i = 0; i < book_copies.length;
-            i++){ %>
+            <% if (book_copies.length){ %> <% for (let i = 0; i <
+            book_copies.length; i++){ %>
             <hr />
             <p>
               <% if (book_copies[i].status == 'Available') { %>
