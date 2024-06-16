@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <ul>
+            <%for (let i = 0; i < genres.length; i++){ %>
+            <li>
+              <a href="<%= genres[i].url %>"><%= genres[i].name %></a>
+            </li>
+            <%} %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

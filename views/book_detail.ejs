@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1><%= book_detail.title %></h1>
+          <p><%= book_detail.author.name %></p>
+          <p><%= book_detail.summary%></p>
+          <p><strong>ISBN: </strong><%=book_detail.isbn%></p>
+          <p>
+            <strong>Genre: </strong>
+            <% for (let i = 0; i < book_detail.genre.length; i++){ %>
+            <a href="<%=book_detail.genre[i].url%>"
+              ><%=book_detail.genre[i].name %></a
+            >, <% } %>
+          </p>
+          <div style="margin-left: 20px; margin-top: 20px">
+            <% if (book_copies){ %> <% for (let i = 0; i < book_copies.length;
+            i++){ %>
+            <hr />
+            <p>
+              <% if (book_copies[i].status == 'Available') { %>
+              <span class="text-success"><%= book_copies[i].status %></span>
+              <% } else if (book_copies[i].status == 'Maintenance') {%>
+              <span class="text-danger"><%= book_copies[i].status %></span>
+              <% }else { %>
+              <span class="text-warning"><%= book_copies[i].status %></span>
+              <% }%>
+            </p>
+
+            <p><strong>Imprint:</strong> <%= book_copies[i].imprint %></p>
+            <p>
+              <strong>Id:</strong>
+              <a href="<%=book_copies[i].url%>"><%= book_copies[i]._id %></a>
+            </p>
+            <% } %> <%} else { %>
+            <p>There are no copies for this book.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

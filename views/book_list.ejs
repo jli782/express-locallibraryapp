@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <ul>
+            <%for (let i = 0; i < books.length; i++){ %>
+            <li>
+              <a href="<%= books[i].url %>"><%= books[i].title %></a> (<%=
+              books[i].author.family_name %>, <%= books[i].author.first_name %>)
+            </li>
+            <%} %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <ul>
+            <% for (let i = 0; i < book_instances.length; i++){ %>
+            <li>
+              <a href="<%= book_instances[i].url %>"
+                ><%=book_instances[i].book.title %></a
+              >
+              : <%= book_instances[i].imprint %> | <% if
+              (book_instances[i].status == 'Available') { %>
+              <span class="text-success"><%= book_instances[i].status %></span>
+              <% } else { %> <% if (book_instances[i].status == 'Maintenance') {
+              %>
+              <span class="text-danger"><%= book_instances[i].status %></span>
+              <%} else {%>
+              <span class="text-warning"><%= book_instances[i].status %></span>
+              <% } %> (DUE: <%= book_instances[i].due_back_formatted %>) <% } %>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
