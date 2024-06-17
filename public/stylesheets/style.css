@@ -12,3 +12,7 @@ a {
   padding: 0;
   list-style: none;
 }
+
+#first_name,#family_name,#date_of_birth,#date_of_death{
+  margin-bottom: 0.5rem;
+}

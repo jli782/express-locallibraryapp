@@ -33,7 +33,6 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
 
 // GET form to create Genre
 exports.genre_create_get = asyncHandler(async (req, res, next) => {
-  console.log({ errors: null });
   res.render("genre_form", {
     title: "Create Genre",
     genre: null,
