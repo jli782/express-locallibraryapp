@@ -138,12 +138,47 @@ exports.book_create_post = [
 
 // GET form to delete book
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Book delete GET`);
+  const [copies, detail] = await Promise.all([
+    BookInstance.find({ book: req.params.id }).sort({ status: 1 }).exec(),
+    Book.findOne({ _id: req.params.id })
+      .populate("author")
+      .populate("genre")
+      .exec(),
+  ]);
+
+  if (!detail) {
+    res.redirect("/catalog/books");
+  }
+  console.log(copies, detail);
+  res.render("book_delete", {
+    title: "Delete book",
+    book_copies: copies,
+    book_detail: detail,
+  });
 });
 
 // POST form to delete book
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Book delete POST`);
+  const [copies, detail] = await Promise.all([
+    BookInstance.find({ book: req.params.id }).sort({ status: 1 }).exec(),
+    Book.findOne({ _id: req.params.id })
+      .populate("author")
+      .populate("genre")
+      .exec(),
+  ]);
+
+  if (!detail) {
+    res.redirect("/catalog/books");
+  } else if (copies.length > 0) {
+    res.render("book_delete", {
+      title: "Delete book",
+      book_copies: copies,
+      book_detail: detail,
+    });
+  } else {
+    await Book.findByIdAndDelete(req.body.bookid);
+    res.redirect("/catalog/books");
+  }
 });
 
 // GET form to update book

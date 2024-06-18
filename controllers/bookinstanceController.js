@@ -64,7 +64,9 @@ exports.bookInstance_create_post = [
 
     const bookInstance = new BookInstance({
       book: req.body.book,
-      imprint: req.body.imprint,
+      imprint: req.body.imprint
+        .replaceAll("&#x2F;", "/")
+        .replaceAll("&amp;", "&"),
       status: req.body.status,
       due_back: req.body.due_back,
     });
@@ -90,12 +92,32 @@ exports.bookInstance_create_post = [
 
 // GET form to delete BookInstance
 exports.bookInstance_delete_get = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: BookInstance delete GET`);
+  let instance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+  console.log(instance);
+  if (!instance) {
+    res.redirect("/catalog/book/" + instance.book._id);
+    return;
+  }
+  res.render("book_instance_delete", {
+    title: "Delete instance",
+    book_instance: instance,
+  });
 });
 
 // POST form to delete BookInstance
 exports.bookInstance_delete_post = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: BookInstance delete POST`);
+  let instance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+  if (!instance) {
+    res.redirect("/catalog/book/" + instance.book._id);
+    return;
+  } else {
+    await BookInstance.findByIdAndDelete(req.body.bookinstanceid);
+    res.redirect("/catalog/book/" + instance.book._id);
+  }
 });
 
 // GET form to update BookInstance

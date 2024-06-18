@@ -25,6 +25,7 @@
               ><%=book_detail.genre[i].name %></a
             >, <% } %>
           </p>
+          <p><a href="<%= book_detail.url%>/delete">Delete book</a></p>
           <div style="margin-left: 20px; margin-top: 20px">
             <% if (book_copies.length){ %> <% for (let i = 0; i <
             book_copies.length; i++){ %>
