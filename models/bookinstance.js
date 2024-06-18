@@ -23,4 +23,9 @@ BookInstanceSchema.virtual("due_back_formatted").get(function () {
     DateTime.DATETIME_MED
   );
 });
+
+// formats the due_back date to yyyy-mm-dd to be compliant with input type='date'
+BookInstanceSchema.virtual("due_back_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.due_back).toISODate();
+});
 module.exports = mongoose.model("BookInstance", BookInstanceSchema);

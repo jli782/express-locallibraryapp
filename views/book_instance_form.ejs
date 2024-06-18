@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include('layout'); -%>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <form method="POST">
+            <div class="form-group">
+              <label for="book">Book:</label>
+              <select id="book" class="form-control" name="book" required>
+                <option value="">--Please select a book--</option>
+                <% for (let book of book_list){ %> <% if
+                (selected_book==book._id.toString()){ %>
+                <option value="<%= book._id %>" selected>
+                  <%= book.title %>
+                </option>
+                <% } else { %>
+                <option value="<%= book._id %>"><%= book.title %></option>
+                <% } %> <% } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="imprint">Imprint:</label>
+              <input
+                name="imprint"
+                class="form-control"
+                id="imprint"
+                type="text"
+                placeholder="Publisher and date information"
+                required
+                value="<% if (bookInstance){ %> <%= bookInstance.imprint %> <% } %>"
+              />
+            </div>
+            <div class="form-group">
+              <label for="due_back">Date when book available:</label>
+              <input
+                name="due_back"
+                id="due_back"
+                class="form-control"
+                type="date"
+                value="<% if (bookInstance){ %> <%= bookInstance.due_back_yyyy_mm_dd %> <% } %>"
+              />
+            </div>
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select id="status" class="form-control" name="status" required>
+                <option>--Please select a status--</option>
+                <% for (let val of ['Maintenance', 'Available', 'Loaned',
+                'Reserved']){ %> <% if (bookInstance && selected_book_status ==
+                val) { %>
+                <option value="<%= val %>" selected><%= val %></option>
+                <% } else { %>
+                <option value="<%= val %>"><%= val %></option>
+                <% } %> <% } %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <% if (errors){ %>
+          <ul>
+            <% for (let error of errors){ %>
+            <li><%= error.msg %></li>
+            <% } %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
