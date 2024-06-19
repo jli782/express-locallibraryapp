@@ -49,10 +49,8 @@
                 placeholder="Summary"
                 required
               >
-              <% if (book){ %>
-                <%= book.summary %>
-              <% } %>
-              </textarea>
+<% if (book){ %><%= book.summary.trim() %><% } %></textarea
+              >
             </div>
             <div class="form-group">
               <label for="isbn">ISBN:</label>
