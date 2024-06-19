@@ -21,7 +21,7 @@
                 placeholder="First name (Christian)"
                 name="first_name"
                 required
-                value="<% if (author) { %> <%= author.first_name %> <% } %>"
+                value="<% if (author) { %><%= author.first_name %><% } %>"
               />
               <label for="family_name">Family name:</label
               ><input
@@ -31,7 +31,7 @@
                 placeholder="Family name (Surname)"
                 name="family_name"
                 required
-                value="<% if (author) { %> <%= author.family_name %> <% } %>"
+                value="<% if (author) { %><%= author.family_name %><% } %>"
               />
             </div>
             <div class="form-group">
@@ -41,15 +41,15 @@
                 class="form-control"
                 type="date"
                 name="date_of_birth"
-                value="<% if (author) { %> <%= author.date_of_birth %> <% } %>"
+                value="<% if (author) { %><%= author.dob_yyyy_mm_dd %><% } %>"
               />
               <label for="date_of_date">Date of death:</label>
               <input
-                id="date_of_date"
+                id="date_of_death"
                 class="form-control"
                 type="date"
-                name="date_of_date"
-                value="<% if (author) { %> <%= author.date_of_date %> <% } %>"
+                name="date_of_death"
+                value="<% if (author) { %><%= author.dod_yyyy_mm_dd %><% } %>"
               />
             </div>
             <button class="btn btn-primary" type="submit">Submit</button>

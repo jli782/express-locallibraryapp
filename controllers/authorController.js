@@ -13,12 +13,16 @@ exports.author_list = asyncHandler(async (req, res, next) => {
 
 // detail page for a specific author
 exports.author_detail = asyncHandler(async (req, res, next) => {
-  // res.send(`NOT IMPLEMENTED: author details ${req.params.id}`);
   const [author, relatedBooks] = await Promise.all([
     await Author.findById(req.params.id).exec(),
     await Book.find({ author: req.params.id }).exec(),
   ]);
   console.log(relatedBooks);
+  if (!author) {
+    const err = new Error("Author not found.");
+    res.status = 404;
+    return next(err);
+  }
   res.render("author_detail", {
     title: `${author.family_name}, ${author.first_name}`,
     author: author,
@@ -141,10 +145,72 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
 
 // GET form to update author
 exports.author_update_get = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: author update GET`);
+  const author = await Author.findById(req.params.id).exec();
+
+  console.log(author);
+  if (!author) {
+    const err = new Error("Author not found.");
+    res.status = 404;
+    return next(err);
+  }
+  res.render("author_form", {
+    title: `Update Author`,
+    author: author,
+    errors: null,
+  });
 });
 
-// POSTT the form to handle update author
-exports.author_update_post = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: author update POST`);
-});
+// POST the form to handle update author
+exports.author_update_post = [
+  body("first_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name is required.")
+    .isAlphanumeric()
+    .withMessage("First name must not have non-alphanumeric characters."),
+  body("family_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name is required.")
+    .isAlphanumeric()
+    .withMessage("First name must not have non-alphanumeric characters."),
+  body("date_of_birth", "Invalid date of birth.")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("date_of_date", "Invalid date of death")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const author = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id,
+    });
+    console.log("POST: ", author);
+    if (!errors.isEmpty()) {
+      errors.array().map((e) => console.log(e));
+      res.render("author_form", {
+        title: "Update Author",
+        author: author,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Update the new Author to database
+      const updatedAuthor = await Author.findByIdAndUpdate(
+        req.params.id,
+        author,
+        {}
+      ).exec();
+      res.redirect(updatedAuthor.url);
+    }
+  }),
+];

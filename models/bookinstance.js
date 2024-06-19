@@ -19,9 +19,10 @@ BookInstanceSchema.virtual("url").get(function () {
 });
 
 BookInstanceSchema.virtual("due_back_formatted").get(function () {
-  return DateTime.fromJSDate(this.due_back).toLocaleString(
+  const res = DateTime.fromJSDate(this.due_back).toLocaleString(
     DateTime.DATETIME_MED
   );
+  return res === "Invalid DateTime" ? "Unknown" : res;
 });
 
 // formats the due_back date to yyyy-mm-dd to be compliant with input type='date'

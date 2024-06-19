@@ -35,7 +35,7 @@
                 type="text"
                 placeholder="Publisher and date information"
                 required
-                value="<% if (bookInstance){ %> <%= bookInstance.imprint %> <% } %>"
+                value="<% if (bookInstance){ %><%= bookInstance.imprint %><% } %>"
               />
             </div>
             <div class="form-group">
@@ -45,7 +45,7 @@
                 id="due_back"
                 class="form-control"
                 type="date"
-                value="<% if (bookInstance){ %> <%= bookInstance.due_back_yyyy_mm_dd %> <% } %>"
+                value="<% if (bookInstance){ %><%= bookInstance.due_back_yyyy_mm_dd %><% } %>"
               />
             </div>
             <div class="form-group">

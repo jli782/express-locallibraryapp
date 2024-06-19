@@ -23,16 +23,16 @@ AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
 
-AuthorSchema.virtual("dob_formatted").get(function () {
+AuthorSchema.virtual("dob_dod_formatted").get(function () {
   let dob = this.date_of_birth
     ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(
-        DateTime.DATETIME_MED
+        DateTime.DATE_MED_WITH_WEEKDAY
       )
     : "???";
 
   let dod = this.date_of_death
     ? DateTime.fromJSDate(this.date_of_death).toLocaleString(
-        DateTime.DATETIME_MED
+        DateTime.DATE_MED_WITH_WEEKDAY
       )
     : "???";
 
@@ -41,6 +41,17 @@ AuthorSchema.virtual("dob_formatted").get(function () {
   else if (dob) res = `${dob} - `;
   else res = `unknown`;
   return res;
+});
+
+AuthorSchema.virtual("dob_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.date_of_birth).toISODate();
+  // return DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+  //   DateTime.DATE_SHORT
+  // );
+});
+
+AuthorSchema.virtual("dod_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.date_of_death).toISODate();
 });
 // export the model
 // Mongoose compiles a model based on the AuthorSchema

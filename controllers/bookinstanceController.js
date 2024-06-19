@@ -19,7 +19,6 @@ exports.bookInstance_list = asyncHandler(async (req, res, next) => {
 
 // detail page for a specific BookInstance
 exports.bookInstance_detail = asyncHandler(async (req, res, next) => {
-  // res.send(`NOT IMPLEMENTED: BookInstance details ${req.params.id}`);
   let instance = await BookInstance.findById(req.params.id)
     .populate("book")
     .exec();
@@ -122,10 +121,71 @@ exports.bookInstance_delete_post = asyncHandler(async (req, res, next) => {
 
 // GET form to update BookInstance
 exports.bookInstance_update_get = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: BookInstance update GET`);
+  const [allBooks, bookInstance] = await Promise.all([
+    Book.find({}, "title").sort({ title: 1 }).exec(),
+    BookInstance.findById(req.params.id).populate("book").exec(),
+  ]);
+  console.log(bookInstance);
+  if (!bookInstance) {
+    const err = new Error("Book copy not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("book_instance_form", {
+    title: "Update BookInstance",
+    book_list: allBooks,
+    errors: null,
+    selected_book: bookInstance.book._id,
+    bookInstance: bookInstance,
+    selected_book_status: bookInstance.status,
+  });
 });
 
 // POST form to handle update BookInstance
-exports.bookInstance_update_post = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: BookInstance update POST`);
-});
+exports.bookInstance_update_post = [
+  body("book", "Book must be specified").trim().isLength({ min: 1 }).escape(),
+  body("status").escape(),
+  body("due_back", "Invalid date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("imprint", "Imprint must be specified.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const bookInstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body.imprint
+        .replaceAll("&#x2F;", "/")
+        .replaceAll("&amp;", "&"),
+      status: req.body.status,
+      due_back: req.body.due_back,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      const allBooks = await Book.find({}, "title").sort({ title: 1 }).exec();
+      errors.array().map((e) => console.log(e));
+      res.render("book_instance_form", {
+        title: "Update BookInstance",
+        book_list: allBooks,
+        errors: errors.array(),
+        selected_book: bookInstance.book._id,
+        bookInstance: bookInstance,
+        selected_book_status: bookInstance.status,
+      });
+      return;
+    } else {
+      const updated_bookInstance = await BookInstance.findByIdAndUpdate(
+        req.params.id,
+        bookInstance,
+        {}
+      );
+      res.redirect(updated_bookInstance.url);
+    }
+  }),
+];

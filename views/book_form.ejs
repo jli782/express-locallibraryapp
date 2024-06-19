@@ -21,7 +21,7 @@
                 placeholder="Name of book"
                 name="title"
                 required
-                value="<% if (book) { %> <%= book.title %> <% } %>"
+                value="<% if (book) { %><%= book.title %><% } %>"
               />
             </div>
             <div class="form-group">
@@ -49,7 +49,7 @@
                 placeholder="Summary"
                 required
               >
-<% if (book){ %><%= book.summary.trim() %><% } %></textarea
+<% if (book){ %><%= book.summary %><% } %></textarea
               >
             </div>
             <div class="form-group">
@@ -61,7 +61,7 @@
                 placeholder="ISBN13"
                 name="isbn"
                 required
-                value="<% if (book){ %> <%= book.isbn %> <% } %>"
+                value="<% if (book){ %><%= book.isbn %><% } %>"
               />
             </div>
             <div class="form-group">
