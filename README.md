@@ -4,8 +4,8 @@ To start normally: npm start
 
 To update minor versions of dependencies: npm update --save
 
-===================================================================
-Tutorial "Local Library" website written in in Node/Express.
+---
+"Local Library" website written in in Node/Express.
 
 ---
 
