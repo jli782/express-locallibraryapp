@@ -52,9 +52,9 @@ exports.author_create_post = [
     .trim()
     .isLength({ min: 1 })
     .escape()
-    .withMessage("First name is required.")
+    .withMessage("Family name is required.")
     .isAlphanumeric()
-    .withMessage("First name must not have non-alphanumeric characters."),
+    .withMessage("Family name must not have non-alphanumeric characters."),
   body("date_of_birth", "Invalid date of birth.")
     .optional({ values: "falsy" })
     .isISO8601()
@@ -173,9 +173,9 @@ exports.author_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape()
-    .withMessage("First name is required.")
+    .withMessage("Family name is required.")
     .isAlphanumeric()
-    .withMessage("First name must not have non-alphanumeric characters."),
+    .withMessage("Family name must not have non-alphanumeric characters."),
   body("date_of_birth", "Invalid date of birth.")
     .optional({ values: "falsy" })
     .isISO8601()

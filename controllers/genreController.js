@@ -169,7 +169,19 @@ exports.genre_update_post = [
         .exec();
       if (genreExists) {
         // Genre exists, redirect to its detail page.
-        res.redirect(genreExists.url);
+        // res.redirect(genreExists.url);
+
+        const error = [
+          {
+            msg: `Genre: "${genreExists.name}" already exists!`,
+          },
+        ];
+        res.render("genre_form", {
+          title: "Update Genre",
+          genre: genre,
+          errors: error,
+        });
+        return;
       } else {
         const updatedGenre = await Genre.findByIdAndUpdate(
           req.params.id,
