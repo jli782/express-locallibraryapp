@@ -62,3 +62,6 @@ typings/
 
 #populatedb.js
 populatedb.js
+
+#launch.bash
+launch.bash
