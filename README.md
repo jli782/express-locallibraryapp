@@ -1,8 +1,8 @@
-To start in development mode: npm run serverstart
+**To start in development mode:** npm run serverstart
 
-To start normally: npm start
+**To start normally:** npm start
 
-To update minor versions of dependencies: npm update --save
+**To update minor versions of dependencies:** npm update --save
 
 ---
 "Local Library" website written in in Node/Express.
