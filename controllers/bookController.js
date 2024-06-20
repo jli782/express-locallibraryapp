@@ -4,6 +4,7 @@ const BookInstance = require("../models/bookinstance");
 const Genre = require("../models/genre");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("book");
 
 exports.index = asyncHandler(async (req, res, next) => {
   /* res.send(`NOT IMPLEMENTED: site home page`); */
@@ -53,6 +54,7 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!detail) {
+    debug(`book not found with id ${req.params.id}`);
     const err = new Error(`Book not found`);
     err.status = 404;
     return next(err);
@@ -129,6 +131,7 @@ exports.book_create_post = [
         book: book,
         errors: errors.array(),
       });
+      return;
     } else {
       await book.save();
       res.redirect(book.url);
@@ -147,6 +150,7 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!detail) {
+    debug(`book ${detail._id} not found!`);
     res.redirect("/catalog/books");
   }
   console.log(copies, detail);
@@ -168,6 +172,7 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!detail) {
+    debug(`book ${detail._id} not found!`);
     res.redirect("/catalog/books");
   } else if (copies.length > 0) {
     res.render("book_delete", {
@@ -190,6 +195,7 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!book) {
+    debug(`book ${req.params.id} not found!`);
     const err = new Error("Book not found");
     err.status = 404;
     return next(err);
@@ -230,7 +236,7 @@ exports.book_update_post = [
   body("genre.*").escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-
+    debug(`in UPDATE book - req.body.genre: ${req.body.genre}`);
     const book = new Book({
       title: req.body.title,
       author: req.body.author,

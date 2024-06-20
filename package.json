@@ -6,7 +6,7 @@
     "lint:ejs": "ejslint ./views/*",
     "devstart": "nodemon ./bin/www",
     "serverstart": "npm run lint:ejs & SET DEBUG=express-locallibraryapp:* & npm run devstart",
-    "start": "node ./bin/www"
+    "start": "SET DEBUG=author,book & node ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

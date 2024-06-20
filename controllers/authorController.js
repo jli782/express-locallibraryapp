@@ -2,6 +2,7 @@ const Author = require("../models/author");
 const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("author");
 
 // lists all authors
 exports.author_list = asyncHandler(async (req, res, next) => {
@@ -19,6 +20,7 @@ exports.author_detail = asyncHandler(async (req, res, next) => {
   ]);
   console.log(relatedBooks);
   if (!author) {
+    debug(`author_detail : Author ${req.params.id} not found!`);
     const err = new Error("Author not found.");
     res.status = 404;
     return next(err);
@@ -74,19 +76,24 @@ exports.author_create_post = [
       date_of_death: req.body.date_of_death,
     });
     if (!errors.isEmpty()) {
-      errors.array().map((e) => console.log(e));
+      errors
+        .array()
+        .map((e) => debug(`author_create_post input field error: `, e.msg));
       res.render("author_form", {
         title: "Create Author",
         author: author,
         errors: errors.array(),
       });
+      return;
     } else {
       // save the new Author to database
       const authorExists = await Author.findOne({
         first_name: req.body.first_name,
         family_name: req.body.family_name,
       }).exec();
-      console.log(`authorExists: ${authorExists}`);
+      debug(
+        `author_create_post: Author ${req.body.first_name} ${req.body.family_name} exists!`
+      );
       if (authorExists) {
         res.redirect(authorExists.url);
       } else {
@@ -108,6 +115,7 @@ exports.author_delete_get = asyncHandler(async (req, res, next) => {
 
   if (!author) {
     // no author found in database
+    debug(`on author_delete_get: author ${req.params.id} not found!`);
     res.redirect("/catalog/authors");
   }
   res.render("author_delete", {
@@ -128,6 +136,7 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!author) {
+    debug(`on author_delete_post: author ${req.params.id} not found!`);
     res.redirect("/catalog/authors");
     return;
   } else if (allBooksByAuthor.length > 0) {
@@ -149,6 +158,7 @@ exports.author_update_get = asyncHandler(async (req, res, next) => {
 
   console.log(author);
   if (!author) {
+    debug(`on author_update_get: author ${req.params.id} not found!`);
     const err = new Error("Author not found.");
     res.status = 404;
     return next(err);
@@ -196,7 +206,7 @@ exports.author_update_post = [
     });
     console.log("POST: ", author);
     if (!errors.isEmpty()) {
-      errors.array().map((e) => console.log(e));
+      errors.array().map((e) => debug(`on author_update_post error: ${e.msg}`));
       res.render("author_form", {
         title: "Update Author",
         author: author,
