@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -34,6 +35,12 @@ app.use(
     },
   })
 );
+
+// set up rate limiter: max 20 requests per minute
+const limit = RateLimit({ windowMs: 1 * 60 * 1000, max: 20 });
+//apply rate limiter to all requests
+app.use(limit);
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
