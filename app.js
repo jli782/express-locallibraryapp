@@ -17,7 +17,7 @@ const app = express();
 const env = require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = process.env.dbConnectionString;
+const mongoDB = process.env.DATABASE_URL || process.env.dbConnectionString;
 
 main().catch((err) => console.log(err));
 async function main() {
