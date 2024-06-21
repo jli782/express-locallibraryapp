@@ -2,7 +2,7 @@ const BookInstance = require("../models/bookinstance");
 const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-
+const debug = require("debug")("bookinstance");
 // list all BookInstances
 exports.bookInstance_list = asyncHandler(async (req, res, next) => {
   // res.send(`NOT IMPLEMENTED: BookInstance list`);
@@ -10,7 +10,7 @@ exports.bookInstance_list = asyncHandler(async (req, res, next) => {
     .populate("book")
     .sort({ book: 1 })
     .exec();
-  console.log(book_instances);
+  debug(`on bookInstance_list: `, book_instances);
   res.render("book_instance_list", {
     title: "List of available copies",
     book_instances: book_instances,
@@ -22,8 +22,9 @@ exports.bookInstance_detail = asyncHandler(async (req, res, next) => {
   let instance = await BookInstance.findById(req.params.id)
     .populate("book")
     .exec();
-  console.log(instance);
+  // debug(`on bookInstance_detail: `, instance);
   if (!instance) {
+    debug(`on bookInstance_detail: Book ${req.params.id} not found!`);
     const err = new Error("Book copy not found");
     err.status = 404;
     return next(err);
@@ -72,7 +73,9 @@ exports.bookInstance_create_post = [
 
     if (!errors.isEmpty()) {
       const allBooks = await Book.find({}, "title").sort({ title: 1 }).exec();
-      errors.array().map((e) => console.log(e));
+      errors
+        .array()
+        .map((e) => debug(`on bookInstance_create_post error: ${e.msg}`));
       res.render("book_instance_form", {
         title: "Create BookInstance",
         book_list: allBooks,
@@ -94,8 +97,11 @@ exports.bookInstance_delete_get = asyncHandler(async (req, res, next) => {
   let instance = await BookInstance.findById(req.params.id)
     .populate("book")
     .exec();
-  console.log(instance);
+  debug(`on bookInstance_delete_get: `, instance);
   if (!instance) {
+    debug(
+      `on bookInstance_delete_get: bookinstance ${req.params.id} not found!`
+    );
     res.redirect("/catalog/book/" + instance.book._id);
     return;
   }
@@ -111,6 +117,9 @@ exports.bookInstance_delete_post = asyncHandler(async (req, res, next) => {
     .populate("book")
     .exec();
   if (!instance) {
+    debug(
+      `on bookInstance_delete_post: bookinstance ${req.params.id} no found!`
+    );
     res.redirect("/catalog/book/" + instance.book._id);
     return;
   } else {
@@ -125,8 +134,11 @@ exports.bookInstance_update_get = asyncHandler(async (req, res, next) => {
     Book.find({}, "title").sort({ title: 1 }).exec(),
     BookInstance.findById(req.params.id).populate("book").exec(),
   ]);
-  console.log(bookInstance);
+  debug(`on bookInstance_update_get: `, bookInstance);
   if (!bookInstance) {
+    debug(
+      `on bookInstance_update_get: bookinstance ${req.params.id} not found!`
+    );
     const err = new Error("Book copy not found");
     err.status = 404;
     return next(err);
@@ -169,7 +181,9 @@ exports.bookInstance_update_post = [
 
     if (!errors.isEmpty()) {
       const allBooks = await Book.find({}, "title").sort({ title: 1 }).exec();
-      errors.array().map((e) => console.log(e));
+      errors
+        .array()
+        .map((e) => debug(`on bookInstance_update_post error: `, e.msg));
       res.render("book_instance_form", {
         title: "Update BookInstance",
         book_list: allBooks,

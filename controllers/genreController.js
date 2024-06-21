@@ -2,6 +2,7 @@ const Genre = require("../models/genre");
 const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("genre");
 
 // list all Genre
 exports.genre_list = asyncHandler(async (req, res, next) => {
@@ -18,11 +19,14 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!genreName) {
+    debug(`on genre_Detail : genre ${req.params.id} not found`);
     const err = new Error(`Genre not found`);
     err.status = 404;
     return next(err);
   }
-  console.log(`genre id: ${req.params.id} | ${genreName} | ${relatedbooks}`);
+  debug(
+    `on genre_Detail : genre id - ${req.params.id} | ${genreName} | ${relatedbooks}`
+  );
   res.render("genre_detail", {
     title: "Genre Detail",
     genre: genreName,
@@ -57,8 +61,8 @@ exports.genre_create_post = [
     const genre = new Genre({ name: req.body.name });
     if (!errors.isEmpty()) {
       // There are errors. Render the form again with sanitized values/error messages.
-      console.log(`genre: ${genre}`);
-      errors.array().map((e) => console.log(e));
+      debug(`on genre_create_post (genre): ${genre}`);
+      errors.array().map((e) => debug(`on genre_create_post error: `, e.msg));
       res.render("genre_form", {
         title: "Create Genre",
         genre: genre,
@@ -73,6 +77,7 @@ exports.genre_create_post = [
         .exec();
       if (genreExists) {
         // Genre exists, redirect to its detail page.
+        debug(`on genre_create_post: ${req.body.name} already exists!`);
         res.redirect(genreExists.url);
       } else {
         await genre.save();
@@ -90,6 +95,7 @@ exports.genre_delete_get = asyncHandler(async (req, res, next) => {
     Genre.findOne({ _id: req.params.id }).exec(),
   ]);
   if (!genre) {
+    debug(`on genre_delete_get: genre ${req.params.id} not found!`);
     res.redirect("/catalog/genres");
   }
   res.render("genre_delete", {
@@ -106,9 +112,13 @@ exports.genre_delete_post = asyncHandler(async (req, res, next) => {
     Genre.findOne({ _id: req.params.id }).exec(),
   ]);
   if (!genre) {
+    debug(`on genre_delete_post: genre ${req.params.id} not found!`);
     res.redirect("/catalog/genres");
     return;
   } else if (relatedBooks.length > 0) {
+    debug(
+      `on genre_delete_post: cannot delete genre ${req.params.id} because it has books ${relatedBooks}!`
+    );
     res.render("genre_delete", {
       title: "Delete Genre",
       relatedbooks: relatedBooks,
@@ -126,11 +136,12 @@ exports.genre_update_get = asyncHandler(async (req, res, next) => {
   const genreName = await Genre.findOne({ _id: req.params.id }).exec();
 
   if (!genreName) {
+    debug(`on genre_update_get: genre ${req.params.id} not found!`);
     const err = new Error(`Genre not found`);
     err.status = 404;
     return next(err);
   }
-  console.log(`genre id: ${req.params.id} | ${genreName}`);
+  debug(`on genre_update_get: genre id - ${req.params.id} | ${genreName}`);
   res.render("genre_form", {
     title: "Update Genre",
     genre: genreName,
@@ -168,14 +179,13 @@ exports.genre_update_post = [
         .collation({ locale: "en", strength: 2 })
         .exec();
       if (genreExists) {
-        // Genre exists, redirect to its detail page.
-        // res.redirect(genreExists.url);
-
+        // Genre already exists and cannot be updated.
         const error = [
           {
             msg: `Genre: "${genreExists.name}" already exists!`,
           },
         ];
+        debug(`on genre_update_post: ${error[0].msg}`);
         res.render("genre_form", {
           title: "Update Genre",
           genre: genre,
