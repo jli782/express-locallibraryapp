@@ -3,6 +3,9 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -14,12 +17,29 @@ const app = express();
 const env = require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = process.env.dbConnectionString;
+const mongoDB = process.env.DATABASE_URL || process.env.dbConnectionString;
 
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
+
+// compress all routes
+app.use(compression());
+
+// add helmet to the middleware chain; set CSP header to allow Bootstrap/jQuery to be served
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["cdn.jsdelivr.net", "code.jquery.com", "self"],
+    },
+  })
+);
+
+// set up rate limiter: max 40 requests per minute
+const limit = RateLimit({ windowMs: 1 * 60 * 1000, max: 40 });
+//apply rate limiter to all requests
+app.use(limit);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
