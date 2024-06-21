@@ -31,13 +31,13 @@ app.use(compression());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      "script-src": [["self", "code.jquery.com", "cdn.jsdelivr.net"]],
+      "script-src": ["cdn.jsdelivr.net", "code.jquery.com", "self"],
     },
   })
 );
 
-// set up rate limiter: max 20 requests per minute
-const limit = RateLimit({ windowMs: 1 * 60 * 1000, max: 20 });
+// set up rate limiter: max 40 requests per minute
+const limit = RateLimit({ windowMs: 1 * 60 * 1000, max: 40 });
 //apply rate limiter to all requests
 app.use(limit);
 

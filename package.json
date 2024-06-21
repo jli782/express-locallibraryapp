@@ -1,6 +1,9 @@
 {
   "name": "express-locallibraryapp",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=20.14.0"
+  },
   "private": true,
   "scripts": {
     "lint:ejs": "ejslint ./views/*",
@@ -26,7 +29,7 @@
     "morgan": "~1.10.0"
   },
   "devDependencies": {
-    "ejs-lint": "^2.0.0",
+    "ejs-lint": "^0.1.1",
     "nodemon": "^3.1.3"
   }
 }

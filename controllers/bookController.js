@@ -236,7 +236,6 @@ exports.book_update_post = [
   body("genre.*").escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    debug(`in UPDATE book - req.body.genre: ${req.body.genre}`);
     const book = new Book({
       title: req.body.title,
       author: req.body.author,
