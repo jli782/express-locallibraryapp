@@ -14,7 +14,7 @@ const catalogRouter = require("./routes/catalog"); // routes for catalog area of
 const app = express();
 
 // MongoDB connection setup
-const env = require("dotenv").config();
+require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.DATABASE_URL || process.env.dbConnectionString;
